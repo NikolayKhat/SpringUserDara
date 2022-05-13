@@ -1,0 +1,28 @@
+/* main */
+div.main {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+/* main */
+
+
+/* footer */
+footer {
+    color: #9a9c9d;
+    font-size: 16px;
+}
+
+footer h4 {
+    color: white;
+    font-size: 18px;
+}
+
+footer a {
+    color: #9a9c9d;
+    transition: 0.3s;
+}
+
+footer a:hover {
+    color: #c6c7c8;
+}
+/* footer */

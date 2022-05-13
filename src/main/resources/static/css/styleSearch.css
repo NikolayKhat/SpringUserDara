@@ -1,0 +1,32 @@
+.main input.passportSeries {
+    max-width: 100px;
+    border-radius: 10px;
+}
+
+.main input.passportNumber {
+    max-width: 120px;
+    border-radius: 10px;
+}
+
+.main button, .main a {
+    border-radius: 10px;
+}
+
+table {
+    padding-top: 10px;
+}
+
+table a {
+    color: #212529;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+table a:hover {
+    color: #1bbd04;
+}
+
+div.error {
+    font-size: 0.875em;
+    color: #dc3545;
+}

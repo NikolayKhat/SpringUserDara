@@ -1,0 +1,47 @@
+/* form */
+div.form {
+    width: 500px;
+    margin: 50px auto;
+}
+
+.form form {
+    border-left: 1px solid #212529;
+    border-right: 1px solid #212529;
+    border-bottom: 1px solid #212529;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    padding: 10px;
+    background-color: white;
+}
+
+a.exit {
+    position: relative;
+    float: right;
+    color: white;
+    transition: 0.3s;
+}
+
+a.exit:hover {
+    color: red;
+}
+
+.form a.reg{
+    float: right;
+    position: relative;
+    top: 8px;
+    text-decoration: none;
+}
+
+label.required::before {
+    content: "*";
+    position: relative;
+    bottom: 4px;
+
+}
+
+div.styleError {
+    margin-top: 0.25rem;
+    font-size: .875em;
+    color: #dc3545;
+}
+/* form */

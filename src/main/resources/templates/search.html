@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en"
+	  xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>Поиск клиентов</title>
+	<link rel="stylesheet" th:href="@{css/styleMain.css}">
+	<link rel="stylesheet" th:href="@{css/styleSearch.css}">
+	<div th:insert="~{fragment/link :: link}"></div>
+</head>
+<body>
+<!-- navbar -->
+<div th:insert="~{fragment/navbar :: navbar}"></div>
+
+<div class="container">
+	<div class="main">
+		<div class="searchClient">
+			<form th:method="post" th:object="${user}">
+				<div class="input-group">
+					<input type="text" minlength="4" maxlength="4" class="form-control passportSeries" id="passportSeries" placeholder="Cерия" th:errorclass="is-invalid" th:field="*{passportSeries}">
+					<input type="text" minlength="6" maxlength="6" class="form-control passportNumber" id="passportNumber" placeholder="Номер" th:errorclass="is-invalid" th:field="*{passportNumber}">
+					<button type="submit" class="btn btn-outline-success">Поиск</button>
+					<a th:href="@{/search}" class="btn btn-outline-secondary">Очистить</a>
+				</div>
+				<div th:if="${#fields.hasErrors('passportSeries')}" th:errorclass="error" th:errors="*{passportSeries}"></div>
+				<div th:if="${#fields.hasErrors('passportNumber')}" th:errorclass="error" th:errors="*{passportNumber}"></div>
+			</form>
+			<div class="main">
+				<table class="table table-hover">
+					<thead class="table-dark">
+					<tr>
+						<th scope="col">Имя</th>
+						<th scope="col">Фамилия</th>
+						<th scope="col">Пол</th>
+						<th scope="col">Возраст</th>
+						<th scope="col">Серия</th>
+						<th scope="col">Номер</th>
+						<th scope="col">Номер телефона</th>
+						<th scope="col">Личная информация</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr th:each="user : ${accounts}">
+						<td th:text="${user.firstName}"></td>
+						<td th:text="${user.lastName}"></td>
+						<td th:text="${user.gender}"></td>
+						<td th:text="${user.age}"></td>
+						<td th:text="${user.passportSeries}"></td>
+						<td th:text="${user.passportNumber}"></td>
+						<td><a th:href="|tel:${user.phoneNumber}|"><span th:text="${user.phoneNumber}"></span> <i class="bi bi-telephone-forward"></i></a></td>
+						<td>
+							<form th:action="@{/download}" th:method="post" id="download">
+								<input type="hidden" name="fileName" th:value="${user.fileLink}">
+								<a href="" onclick='document.forms["download"].submit(); return false;'>скачать <i class="bi bi-file-earmark-arrow-down"></i></a>
+							</form>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- footer -->
+<div th:insert="~{fragment/footer :: footer}"></div>
+
+</body>
+</html>

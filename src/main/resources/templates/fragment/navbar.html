@@ -1,0 +1,44 @@
+<!-- navbar -->
+<div th:fragment="navbar">
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+		<div class="container-fluid container">
+			<a class="navbar-brand" th:href="@{/}">UserData</a>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Переключатель навигации">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+					<li class="nav-item">
+						<a th:href="@{/}" class="nav-link">Главная</a>
+					</li>
+					<li class="nav-item">
+						<a th:href="@{/search}" class="nav-link">Поиск клиента</a>
+					</li>
+				</ul>
+				<ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+					<li class="nav-item dropdown">
+						<!-- Если пользователь вошел в аккаунт, то отображается его login (при нажатии на login отображается кнопка выхода) -->
+						<div sec:authorize="isAuthenticated()">
+							<form th:action="@{/logout}" method="post">
+								<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><span sec:authentication="name"></span></a>
+								<ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdown">
+									<li>
+										<input type="submit" class="dropdown-item" value="Выход"/>
+									</li>
+								</ul>
+							</form>
+						</div>
+						<!-- Если пользователь не вошел в аккаунт, то отображается иконка "пользователя" (при нажатии на нее появляются кнопки входа и регистрации) -->
+						<div sec:authorize="!isAuthenticated()">
+							<a href="" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="bi bi-person-circle"></i></a>
+							<ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdown">
+								<li><a th:href="@{/login}" class="dropdown-item">Вход</a></li>
+								<li><a th:href="@{/registration}" class="dropdown-item">Регистрация</a></li>
+							</ul>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+</div>
