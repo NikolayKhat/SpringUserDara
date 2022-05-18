@@ -19,4 +19,7 @@ public interface AccountsRepository extends CrudRepository<User, Long> {
 
     /* Находит все аккаунты */
     List<User> findAllBy();
+
+    /* Удаляет аккаунт (для тестов) */
+    void delete(User user);
 }

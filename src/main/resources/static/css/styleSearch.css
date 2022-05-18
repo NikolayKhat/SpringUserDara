@@ -30,3 +30,18 @@ div.error {
     font-size: 0.875em;
     color: #dc3545;
 }
+
+button.unstyled {
+    background:none;
+    border:none;
+    margin:0;
+    padding:0;
+    cursor: pointer;
+    color: #212529;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+button.unstyled:hover {
+    color: #1bbd04;
+}

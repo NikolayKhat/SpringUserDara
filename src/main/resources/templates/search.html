@@ -52,7 +52,7 @@
 						<td>
 							<form th:action="@{/download}" th:method="post" id="download">
 								<input type="hidden" name="fileName" th:value="${user.fileLink}">
-								<a href="" onclick='document.forms["download"].submit(); return false;'>скачать <i class="bi bi-file-earmark-arrow-down"></i></a>
+								<button type="submit"class="unstyled">скачать <i class="bi bi-file-earmark-arrow-down"></i></button>
 							</form>
 						</td>
 					</tr>
