@@ -10,6 +10,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -17,30 +19,52 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
-/* Сервис для считывания и добавления в таблицу accounts клиента*/
+/**
+ * Сервисный класс, отвечающий за чтение и записи данных клиента в таблицу accounts.
+ */
 @Service
 public class AccountsService implements UserDetailsService {
 
+    /**
+     * Поле отвечает за доступ к данным из таблицы accounts.
+     */
     @Autowired
     AccountsRepository accountsRepository;
 
+    /**
+     * Поле содержит ссылку на место, где хранятся файлы с личной информацией пользователей.
+     */
     @Value("${upload.path}")
     private String uploadPath;
 
-    /* Проверяет, не занят ли логин */
+    /**
+     * Метод проверяет, не занят ли логин.
+     * @param user хранит и проверяет данные пользователя.
+     * @return true/false, если пользователь существует/не существует.
+     */
+    @Transactional(readOnly = true)
     public boolean usernameCheck(User user) {
         User username = accountsRepository.findByUsername(user.getUsername());
-        if (username == null) return false;
-        else return true;
+        if (username != null) return  true;
+        else return false;
     }
 
-    /* Проверяет, совпадают ли пароли */
+    /**
+     * Метод проверяет, совпадают ли пароли.
+     * @param user хранит и проверяет данные пользователя.
+     * @return true/false, если пароли совпадают/не совпадают.
+     */
     public boolean passwordsMatch(User user) {
         if (user.getPassword().equals(user.getPasswordRe())) return true;
         else return false;
     }
 
-    /* Сохраняет аккаунт в accounts */
+    /**
+     * Метод сохраняет дынные пользователя в БД accounts.
+     * @param user хранит и проверяет данные пользователя.
+     * @param file хранить файл с личной информацией пользователя.
+     */
+    @Transactional
     public void saveAccount(User user, MultipartFile file) {
         saveFile(user, file);
         user.setRole("USER");
@@ -49,7 +73,11 @@ public class AccountsService implements UserDetailsService {
         accountsRepository.save(user);
     }
 
-    /* Сохранение файла в папке uploads */
+    /**
+     * Метод сохраняет файл в uploadPath и передает название в user.
+     * @param user хранит и проверяет данные пользователя.
+     * @param file хранит файл с личной информацией пользователя.
+     */
     public void saveFile(User user, MultipartFile file) {
         if (file != null) {
             File uploadDir = new File(uploadPath);
@@ -68,20 +96,37 @@ public class AccountsService implements UserDetailsService {
 
     }
 
-    /* Возвращает список аккаунтов */
-    public List<User> accounts(SearchUser searchUser) {
+    /**
+     * Метод ищет нужные аккаунты пользователей.
+     * @param searchUser содержит паспортные данные пользователя.
+     * @param result содержит все ошибки.
+     * @return список клиентов.
+     */
+    @Transactional(readOnly = true)
+    public List<User> accounts(SearchUser searchUser, BindingResult result) {
         String series = searchUser.getPassportSeries();
         String number = searchUser.getPassportNumber();
         if (series == null || number == null ||
             series.equals("") || number.equals("")) {
             return accountsRepository.findAllBy();
-        } else {
+        }
+        if (!accountsRepository.findByPassportSeriesAndPassportNumber(searchUser.getPassportSeries(), searchUser.getPassportNumber()).isEmpty()) {
             return accountsRepository.findByPassportSeriesAndPassportNumber(series, number);
+        } else {
+            result.rejectValue("passportSeries", "result.passportSeries", "Пользователя с такими паспортными данными не существует");
+            result.rejectValue("passportNumber", "result.passportNumber", "");
+            return accountsRepository.findAllBy();
         }
     }
 
-    /* security */
+    /**
+     * Метод нужен для реализации интерфейса UserDetailsService.
+     * @param username содержит логин пользователя.
+     * @return пользователя с заданным логином.
+     * @throws UsernameNotFoundException
+     */
     @Override
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = accountsRepository.findByUsername(username);
 
